@@ -12,15 +12,16 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 
 estate=pd.read_csv('C:\\Users\\frank\\Desktop\\PYTHON\\Kaggle\\House\\train_manipulated.csv')
-estate.dropna(axis=1,thresh=700)#axis=1表示丢弃列，thresh=700表示丢弃非空值小于700的列
+estate=estate.dropna(axis=1,thresh=700)#axis=1表示丢弃列，thresh=700表示丢弃非空值小于700的列
 #type(estate)
-#print(estate.head())
+print(estate.shape)
 
 x=estate.iloc[:,1:76]#丢弃空值较多的列后还剩77列，其中第一列是ID不要
 #type(x)
 #print(x[:5,:])
 y=estate[['SalePrice']]
 #type(y)
+
 from sklearn.feature_extraction import DictVectorizer
 vec=DictVectorizer(sparse=False)
 x=vec.fit_transform(x.to_dict(orient='record'))
@@ -41,7 +42,7 @@ print('\nXGB_train_score=%f\n'%clfX.score(x_train,y_train))
 print('\nXGB_test_score=%f\n'%clfX.score(x_test,y_test))
 
 unknown=pd.read_csv('C:\\Users\\frank\\Desktop\\PYTHON\\Kaggle\\House\\test_manipulated.csv')
-unknown.dropna(axis=1,thresh=700)
+unknown=unknown.dropna(axis=1,thresh=700)
 x_unknown=unknown.iloc[:,1:76]
 #print(x_unknown.head())
 x_unknown=vec.transform(x_unknown.to_dict(orient='record'))
@@ -49,7 +50,7 @@ x_unknown=vec.transform(x_unknown.to_dict(orient='record'))
 x_unknown.shape
 y_unknown=clfX.predict(x_unknown)
 #type(Xy_unknown)
-print(y_unknown.shape)
+#print(y_unknown.shape)
 #由于y_unknown是一个ndarray，必须转化成pd.dataframe才能使用pd.to_excel
 
 df=pd.DataFrame(y_unknown,index=np.arange(1460,2919,step=1),columns=['SalePrice'])#生成一个DataFrame，df
